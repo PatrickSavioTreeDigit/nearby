@@ -1,8 +1,13 @@
 // Utility to fetch nearby party halls/hotels using Google Places API
 // Usage: getNearbyPlaces({ lat, lng })
 
+if (typeof process !== 'undefined' && process.env && !process.env.GOOGLE_API_KEY) {
+  // Load .env if running in Node.js (for local dev)
+  try { require('dotenv').config(); } catch (e) {}
+}
+
 export async function getNearbyPlaces({ lat, lng }) {
-  const apiKey = 'AIzaSyDTTLmHpb4t4mdnTDZqjLydn0peoTe5cEM';
+  const apiKey = process.env.GOOGLE_API_KEY;
   const endpoint = 'https://places.googleapis.com/v1/places:searchNearby';
   const body = {
     locationRestriction: {
