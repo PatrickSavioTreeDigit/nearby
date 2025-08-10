@@ -51,6 +51,7 @@
   outline: none;
   margin-top: 14px;
   align-self: flex-start;
+  white-space: nowrap;
 }
 
 .neonButton:hover {
@@ -165,6 +166,14 @@
   align-items: center;
   gap: 16px;
   margin-top: 10px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.placeCardActions .distance {
+  margin-left: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .placeCardActions .distance {
@@ -324,6 +333,11 @@ a.secondary {
     min-width: auto;
   }
 
+  .placeCardActions {
+    flex-wrap: nowrap;
+    gap: 8px;
+    min-width: 0;
+  }
   .footer {
     flex-wrap: wrap;
     align-items: center;
