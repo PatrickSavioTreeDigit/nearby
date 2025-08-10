@@ -13,13 +13,10 @@
 
 
 
-.neonButton {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
+ .neonButton {
   display: inline-block;
-  padding: 8px 22px;
-  min-width: 90px;
+  padding: 8px 12px;
+  width: auto;
   color: #fff;
   background: linear-gradient(120deg, #111 0%, #2d001a 100%);
   border: none;
@@ -28,11 +25,13 @@
   font-size: 1.05em;
   letter-spacing: 0.01em;
   cursor: pointer;
-  z-index: 2;
   box-shadow: 0 0 18px 4px #2d001a55, 0 2px 10px 0 rgba(30,58,138,0.13);
   transition: color 0.2s, box-shadow 0.2s;
   outline: none;
+  margin-top: 14px;
+  align-self: flex-start;
 }
+
 .neonButton:hover {
   color: #60a5fa;
   box-shadow: 0 0 24px 6px #60a5fa99, 0 0 48px 12px #a21caf55;
@@ -137,6 +136,18 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.placeCardActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.placeCardActions .distance {
+  margin-left: auto;
 }
 .placeCard strong {
   font-size: 1.22em;

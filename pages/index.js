@@ -20,6 +20,8 @@ export default function Home() {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -45,6 +47,32 @@ export default function Home() {
     }
   }, []);
 
+  // Search by US zipcode
+  const handleZipcodeSearch = async (e) => {
+    e.preventDefault();
+    setSearching(true);
+    setError("");
+    try {
+      const res = await fetch("/api/geocode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ zipcode })
+      });
+      const data = await res.json();
+      if (res.ok && data.lat && data.lng) {
+        setLoading(true);
+        const results = await getNearbyPlaces({ lat: data.lat, lng: data.lng });
+        setPlaces(results);
+        setLoading(false);
+      } else {
+        setError(data.error || "Invalid zipcode");
+      }
+    } catch (err) {
+      setError("Failed to search by zipcode.");
+    }
+    setSearching(false);
+  };
+
   // Color by rating for highlight box
   const getHighlightColor = (rating) => {
     if (rating > 4.8) return "#ff3b30"; // Red
@@ -66,6 +94,21 @@ export default function Home() {
           <motion.h1 initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: "easeOut" }}>
             Nearby Party Halls & Hotels
           </motion.h1>
+          <form onSubmit={handleZipcodeSearch} style={{ display: 'flex', gap: 12, marginBottom: 24, alignItems: 'center' }}>
+            <input
+              type="text"
+              placeholder="Enter US Zipcode"
+              value={zipcode}
+              onChange={e => setZipcode(e.target.value)}
+              maxLength={10}
+              pattern="[0-9]{5}(-[0-9]{4})?"
+              style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #b3c6ff', fontSize: '1em', outline: 'none', width: 140 }}
+              required
+            />
+            <button type="submit" className={styles.neonButton} disabled={searching} style={{ minWidth: 80 }}>
+              {searching ? 'Searching...' : 'Search by Zipcode'}
+            </button>
+          </form>
           {loading && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>Detecting your location and fetching places...</motion.p>}
           {error && <motion.p style={{ color: "red" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}
           {!loading && !error && (
@@ -95,17 +138,19 @@ export default function Home() {
                     <motion.div className={styles.placeCardContent} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: idx * 0.09 + 0.3 }}>
                       <strong>{place.name}</strong>
                       <div className={styles.address}>{place.vicinity}</div>
-                      <div className={styles.distance}>
-                        {place.distance
-                          ? `${(place.distance / 1000).toFixed(2)} km`
-                          : "-"}
+                      <div className={styles.placeCardActions}>
+                        <a
+                          href={`/place/${place.place_id}`}
+                          className={styles.neonButton}
+                        >
+                          View More
+                        </a>
+                        <div className={styles.distance}>
+                          {place.distance
+                            ? `${(place.distance / 1000).toFixed(2)} km`
+                            : "-"}
+                        </div>
                       </div>
-                      <a
-                        href={`/place/${place.place_id}`}
-                        className={styles.neonButton}
-                      >
-                        View More
-                      </a>
                     </motion.div>
                   </motion.li>
                 ))}
