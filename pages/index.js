@@ -105,7 +105,7 @@ export default function Home() {
               style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #b3c6ff', fontSize: '1em', outline: 'none', width: 140 }}
               required
             />
-            <button type="submit" className={styles.neonButton} disabled={searching} style={{ minWidth: 80 }}>
+            <button type="submit" className={styles.zipButton} disabled={searching} style={{ minWidth: 80 }}>
               {searching ? 'Searching...' : 'Search by Zipcode'}
             </button>
           </form>
